@@ -16,16 +16,16 @@ def parse(text):
     chunk = []
     for s in ret['result']['problems']:
         # "contestId", "index", "name", "type", "tags"
-        for t in s['tags']:
-            chunk.append({
-                'contest_id': s['contestId'],
-                'problem_index': s['index'],
-                'problem_tag': t
-            })
+        chunk.append({
+            'contest_id': s['contestId'],
+            'problem_index': s['index'],
+            'problem_name': s['name'],
+            'problem_type': s['type']
+        })
 
-            if len(chunk) >= 500:
-                yield chunk
-                chunk = []
+        if len(chunk) >= 500:
+            yield chunk
+            chunk = []
 
     if len(chunk) > 0:
         yield chunk
