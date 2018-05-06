@@ -96,3 +96,56 @@ Resources:
           IntervalInSeconds: 300
           SizeInMBs: 128
         RoleARN: !GetAtt FirehoseRole.Arn
+
+  #
+  # problems
+  #
+  ProblemsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: problems.handler
+      Runtime: python3.6
+      CodeUri: ./functions/problems.py
+      MemorySize: 256
+      Timeout: 30
+      Policies:
+        - AmazonKinesisFirehoseFullAccess
+
+  ProblemsFirehose:
+    Type: AWS::KinesisFirehose::DeliveryStream
+    Properties:
+      DeliveryStreamName: codeforces-analysis-problems
+      DeliveryStreamType: DirectPut
+      S3DestinationConfiguration:
+        BucketARN: arn:aws:s3:::codeforces-analysis
+        Prefix: data/gzip/problems/
+        CompressionFormat: GZIP
+        BufferingHints:
+          IntervalInSeconds: 300
+          SizeInMBs: 128
+        RoleARN: !GetAtt FirehoseRole.Arn
+
+  ProblemTagsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: problem_tags.handler
+      Runtime: python3.6
+      CodeUri: ./functions/problem_tags.py
+      MemorySize: 256
+      Timeout: 30
+      Policies:
+        - AmazonKinesisFirehoseFullAccess
+
+  ProblemsTagsFirehose:
+    Type: AWS::KinesisFirehose::DeliveryStream
+    Properties:
+      DeliveryStreamName: codeforces-analysis-problem-tags
+      DeliveryStreamType: DirectPut
+      S3DestinationConfiguration:
+        BucketARN: arn:aws:s3:::codeforces-analysis
+        Prefix: data/gzip/problem-tags/
+        CompressionFormat: GZIP
+        BufferingHints:
+          IntervalInSeconds: 300
+          SizeInMBs: 128
+        RoleARN: !GetAtt FirehoseRole.Arn
