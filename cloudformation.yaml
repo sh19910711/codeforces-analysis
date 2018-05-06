@@ -1,6 +1,25 @@
 Transform: 'AWS::Serverless-2016-10-31'
 
 Resources:
+  #
+  # Common
+  #
+  FirehoseRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: firehose.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AmazonS3FullAccess
+
+  #
+  # Submissions
+  #
   SubmissionsFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -35,19 +54,6 @@ Resources:
           SizeInMBs: 128
         RoleARN: !GetAtt FirehoseRole.Arn
 
-  FirehoseRole:
-    Type: AWS::IAM::Role
-    Properties:
-      AssumeRolePolicyDocument:
-        Version: 2012-10-17
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service: firehose.amazonaws.com
-            Action: sts:AssumeRole
-      ManagedPolicyArns:
-        - arn:aws:iam::aws:policy/AmazonS3FullAccess
-
   SubmissionsQueue:
     Type: AWS::DynamoDB::Table
     Properties:
@@ -62,3 +68,31 @@ Resources:
         WriteCapacityUnits: 1
       StreamSpecification:
         StreamViewType: KEYS_ONLY
+
+  #
+  # contests
+  #
+  ContestsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: contests.handler
+      Runtime: python3.6
+      CodeUri: ./functions/contests.py
+      MemorySize: 256
+      Timeout: 30
+      Policies:
+        - AmazonKinesisFirehoseFullAccess
+
+  ContestsFirehose:
+    Type: AWS::KinesisFirehose::DeliveryStream
+    Properties:
+      DeliveryStreamName: codeforces-analysis-contests
+      DeliveryStreamType: DirectPut
+      S3DestinationConfiguration:
+        BucketARN: arn:aws:s3:::codeforces-analysis
+        Prefix: data/gzip/contests/
+        CompressionFormat: GZIP
+        BufferingHints:
+          IntervalInSeconds: 300
+          SizeInMBs: 128
+        RoleARN: !GetAtt FirehoseRole.Arn
