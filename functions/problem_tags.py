@@ -39,7 +39,7 @@ def handler(event, context):
 
     for chunk in parse(res.text):
         firehose.put_record_batch(
-            DeliveryStreamName='codeforces-analysis-problems',
+            DeliveryStreamName='codeforces-analysis-problem-tags',
             Records=[{ 'Data': json.dumps(status) + "\n" } for status in chunk]
         )
 
