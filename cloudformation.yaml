@@ -149,3 +149,32 @@ Resources:
           IntervalInSeconds: 300
           SizeInMBs: 128
         RoleARN: !GetAtt FirehoseRole.Arn
+
+
+  #
+  # Users
+  #
+  UsersFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: users.handler
+      Runtime: python3.6
+      CodeUri: ./functions/users.py
+      MemorySize: 1024
+      Timeout: 60
+      Policies:
+        - AmazonKinesisFirehoseFullAccess
+
+  UsersFirehose:
+    Type: AWS::KinesisFirehose::DeliveryStream
+    Properties:
+      DeliveryStreamName: codeforces-analysis-users
+      DeliveryStreamType: DirectPut
+      S3DestinationConfiguration:
+        BucketARN: arn:aws:s3:::codeforces-analysis
+        Prefix: data/gzip/users/
+        CompressionFormat: GZIP
+        BufferingHints:
+          IntervalInSeconds: 300
+          SizeInMBs: 128
+        RoleARN: !GetAtt FirehoseRole.Arn
