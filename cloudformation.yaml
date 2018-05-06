@@ -4,9 +4,9 @@ Resources:
   SubmissionsFunction:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: download.handler
+      Handler: submissions.handler
       Runtime: python3.6
-      CodeUri: ./submissions
+      CodeUri: ./functions/submissions.py
       MemorySize: 256
       Timeout: 30
       Policies:
