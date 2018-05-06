@@ -1,14 +1,13 @@
 tmp:
 	mkdir tmp
 
-package: tmp
+stack: tmp
 	aws cloudformation package \
 		--template-file cloudformation.yaml \
 		--s3-bucket codeforces-analysis \
 		--s3-prefix cloudformation \
 		--output-template-file tmp/packaged-cloudformation.yaml
 
-deploy:
 	aws cloudformation deploy \
 		--template-file tmp/packaged-cloudformation.yaml \
 		--stack-name codeforces-analysis \

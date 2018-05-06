@@ -1,34 +1,34 @@
 Transform: 'AWS::Serverless-2016-10-31'
 
 Resources:
-  ContestSubmissionsFunction:
+  SubmissionsFunction:
     Type: AWS::Serverless::Function
     Properties:
       Handler: download.handler
       Runtime: python3.6
-      CodeUri: ./contest_submissions
+      CodeUri: ./submissions
       MemorySize: 256
       Timeout: 30
       Policies:
         - AmazonKinesisFirehoseFullAccess
         - AWSLambdaInvocation-DynamoDB
 
-  ContestSubmissionsFunctionTrigger:
+  SubmissionsFunctionTrigger:
     Type: AWS::Lambda::EventSourceMapping
     Properties:
-      EventSourceArn: !GetAtt ContestSubmissionsQueue.StreamArn
-      FunctionName: !GetAtt ContestSubmissionsFunction.Arn
+      EventSourceArn: !GetAtt SubmissionsQueue.StreamArn
+      FunctionName: !GetAtt SubmissionsFunction.Arn
       StartingPosition: LATEST
       BatchSize: 1
 
-  ContestSubmissionsFirehose:
+  SubmissionsFirehose:
     Type: AWS::KinesisFirehose::DeliveryStream
     Properties:
-      DeliveryStreamName: codeforces-analysis-contest-submissions
+      DeliveryStreamName: codeforces-analysis-submissions
       DeliveryStreamType: DirectPut
       S3DestinationConfiguration:
         BucketARN: arn:aws:s3:::codeforces-analysis
-        Prefix: data/contest-submissions/
+        Prefix: data/gzip/submissions/
         CompressionFormat: GZIP
         BufferingHints:
           IntervalInSeconds: 300
@@ -48,7 +48,7 @@ Resources:
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/AmazonS3FullAccess
 
-  ContestSubmissionsQueue:
+  SubmissionsQueue:
     Type: AWS::DynamoDB::Table
     Properties:
       AttributeDefinitions:
