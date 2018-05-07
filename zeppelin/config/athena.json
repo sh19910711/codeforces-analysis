@@ -1,0 +1,17 @@
+{
+  "name": "athena",
+  "group": "jdbc",
+  "properties": {
+    "common.max_count": "1000",
+    "default.s3_staging_dir": "s3://codeforces-analysis/zeppelin/",
+    "default.driver": "com.simba.athena.jdbc.Driver",
+    "default.url": "jdbc:awsathena://athena.us-east-1.amazonaws.com:443/",
+    "default.aws_credentials_provider_class": "com.simba.athena.amazonaws.auth.DefaultAWSCredentialsProviderChain",
+    "zeppelin.interpreter.localRepo": "/zeppelin/local-repo/2DEM1G4MF",
+    "zeppelin.jdbc.keytab.location": "",
+    "zeppelin.jdbc.concurrent.use": "true",
+    "zeppelin.jdbc.concurrent.max_connection": "10",
+    "zeppelin.interpreter.output.limit": "102400"
+  },
+  "dependencies":[{"groupArtifactVersion":"/zeppelin/lib/AthenaJDBC41_2.0.2.jar"}]
+}
