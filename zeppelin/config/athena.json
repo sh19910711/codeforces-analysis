@@ -2,16 +2,36 @@
   "name": "athena",
   "group": "jdbc",
   "properties": {
-    "common.max_count": "1000",
-    "default.s3_staging_dir": "s3://codeforces-analysis/zeppelin/",
-    "default.driver": "com.simba.athena.jdbc.Driver",
     "default.url": "jdbc:awsathena://athena.us-east-1.amazonaws.com:443/",
-    "default.aws_credentials_provider_class": "com.simba.athena.amazonaws.auth.DefaultAWSCredentialsProviderChain",
-    "zeppelin.interpreter.localRepo": "/zeppelin/local-repo/2DEM1G4MF",
-    "zeppelin.jdbc.keytab.location": "",
+    "default.user": "",
+    "default.password": "",
+    "default.driver": "com.simba.athena.jdbc42.Driver",
+    "default.s3_staging_dir": "s3://codeforces-analysis/zeppelin/",
+    "common.max_count": "1000",
+    "zeppelin.jdbc.auth.type": "",
     "zeppelin.jdbc.concurrent.use": "true",
     "zeppelin.jdbc.concurrent.max_connection": "10",
-    "zeppelin.interpreter.output.limit": "102400"
+    "zeppelin.jdbc.keytab.location": "",
+    "zeppelin.jdbc.principal": "",
+    "default.aws_credentials_provider_class": "com.simba.athena.amazonaws.auth.DefaultAWSCredentialsProviderChain"
   },
-  "dependencies":[{"groupArtifactVersion":"/zeppelin/lib/AthenaJDBC41_2.0.2.jar"}]
+  "dependencies": [
+    {
+      "groupArtifactVersion": "/zeppelin/lib/AthenaJDBC42_2.0.2.jar"
+    }
+  ],
+  "option": {
+    "remote": true,
+    "isExistingProcess": false,
+    "setPermission": false,
+    "session": false,
+    "process": false,
+    "perNote": "shared",
+    "perUser": "shared",
+    "users": []
+  },
+  "propertyValue": "",
+  "propertyKey": "",
+  "depArtifact": "",
+  "depExclude": ""
 }

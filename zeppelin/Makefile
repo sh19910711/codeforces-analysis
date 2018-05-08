@@ -1,7 +1,5 @@
-build:
-	docker build -t zeppelin .
-
 run:
+	docker build -t zeppelin .
 	docker run \
 		-v /tmp/zeppelin-notebooks:/zeppelin/notebook \
 		-v $(HOME)/.aws:/root/.aws \
