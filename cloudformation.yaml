@@ -26,8 +26,8 @@ Resources:
       Handler: submissions.handler
       Runtime: python3.6
       CodeUri: ./functions/submissions.py
-      MemorySize: 256
-      Timeout: 30
+      MemorySize: 512
+      Timeout: 60
       Policies:
         - AmazonKinesisFirehoseFullAccess
         - AWSLambdaInvocation-DynamoDB
