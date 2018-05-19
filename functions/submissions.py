@@ -24,7 +24,7 @@ def parse(text):
             'user_name': s['author']['members'][0]['handle'],
             'participant_type': s['author']['participantType'],
             'language': s['programmingLanguage'],
-            'verdict': s['verdict'],
+            'verdict': s.get('verdict'),
             'passed_test_count': s['passedTestCount'],
             'execution_time': s['timeConsumedMillis'],
             'execution_memory': s['memoryConsumedBytes']
