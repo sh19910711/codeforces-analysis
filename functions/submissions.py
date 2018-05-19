@@ -42,6 +42,15 @@ def parse(text):
 def handler(event, context):
     contest_id = event['Records'][0]['dynamodb']['Keys']['contest_id']['N']
 
+    version = firehose.describe_delivery_stream(DeliveryStreamName='codeforces-analysis-submissions')['DeliveryStreamDescription']['VersionId']
+    firehose.update_destination(
+        DeliveryStreamName='codeforces-analysis-submissions',
+        CurrentDeliveryStreamVersionId=version,
+        DestinationId='destinationId-000000000001',
+        S3DestinationUpdate={
+            'Prefix': 'data/parquet/submissions/contest_id={}/'.format(contest_id)
+        })
+
     url = 'http://codeforces.com/api/contest.status?contestId={}&from=1&count=100000'.format(contest_id)
     logger.info('GET: {}'.format(url))
     res = requests.get(url)

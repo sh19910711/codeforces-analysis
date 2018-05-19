@@ -32,6 +32,36 @@ Resources:
         - AmazonKinesisFirehoseFullAccess
         - AWSLambdaInvocation-DynamoDB
 
+  SubmissionsPopFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: submissions_pop.handler
+      Runtime: python3.6
+      CodeUri: ./functions/submissions_pop.py
+      MemorySize: 128
+      Timeout: 10
+      Environment:
+        Variables:
+          SQS_URL: !Ref SubmissionsWaitQueue
+          DYNAMODB_TABLE: !Ref SubmissionsQueue
+      Policies:
+        - AmazonSQSFullAccess
+        - AmazonDynamoDBFullAccess
+
+  SubmissionsPushFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: submissions_push.handler
+      Runtime: python3.6
+      CodeUri: ./functions/submissions_push.py
+      MemorySize: 128
+      Timeout: 10
+      Environment:
+        Variables:
+          SQS_URL: !Ref SubmissionsWaitQueue
+      Policies:
+        - AmazonSQSFullAccess
+
   SubmissionsFunctionTrigger:
     Type: AWS::Lambda::EventSourceMapping
     Properties:
@@ -68,6 +98,9 @@ Resources:
         WriteCapacityUnits: 1
       StreamSpecification:
         StreamViewType: KEYS_ONLY
+
+  SubmissionsWaitQueue:
+    Type: AWS::SQS::Queue
 
   #
   # contests
