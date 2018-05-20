@@ -16,7 +16,7 @@ def push(item):
         )
 
 def handler(event, context):
-    push({
-        'contest_id': 123
-    })
+    if 'contest_id' in event:
+        logger.info('process: {}'.format(json.dumps(event)))
+        push(event)
     return 'OK'

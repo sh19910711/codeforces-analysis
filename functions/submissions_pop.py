@@ -22,6 +22,7 @@ def pop():
 def handler(event, context):
     item = pop()
     if item:
+        logger.info('pop: {}'.format(json.dumps(item)))
         t = dynamodb.Table(TABLE_NAME)
         t.put_item(
             Item=item
