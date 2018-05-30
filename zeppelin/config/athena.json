@@ -7,7 +7,7 @@
     "default.password": "",
     "default.driver": "com.simba.athena.jdbc42.Driver",
     "default.s3_staging_dir": "s3://codeforces-analysis/zeppelin/",
-    "common.max_count": "1000",
+    "common.max_count": "100000",
     "zeppelin.jdbc.auth.type": "",
     "zeppelin.jdbc.concurrent.use": "true",
     "zeppelin.jdbc.concurrent.max_connection": "10",
