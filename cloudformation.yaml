@@ -17,6 +17,13 @@ Resources:
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/AmazonS3FullAccess
 
+  Database:
+    Type: AWS::Glue::Database
+    Properties:
+      CatalogId: !Ref AWS::AccountId
+      DatabaseInput:
+        Name: codeforces
+
   #
   # Submissions
   #
@@ -101,6 +108,46 @@ Resources:
 
   SubmissionsWaitQueue:
     Type: AWS::SQS::Queue
+
+  SubmissionsTable:
+    Type: AWS::Glue::Table
+    DependsOn: Database
+    Properties:
+      CatalogId: !Ref AWS::AccountId
+      DatabaseName: codeforces
+      TableInput:
+        Name: submissions
+        StorageDescriptor:
+          Location: 's3://codeforces-analysis/data/parquet/submissions/'
+          InputFormat: org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat
+          OutputFormat: org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat
+          SerdeInfo:
+            SerializationLibrary: org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe
+          Columns:
+            - Name: status_id
+              Type: bigint
+            - Name: contest_id
+              Type: bigint
+            - Name: create_time
+              Type: string
+            - Name: relative_time
+              Type: string
+            - Name: problem_index
+              Type: string
+            - Name: user_name
+              Type: string
+            - Name: participant_type
+              Type: string
+            - Name: language
+              Type: string
+            - Name: verdict
+              Type: string
+            - Name: passed_test_count
+              Type: bigint
+            - Name: execution_time
+              Type: bigint
+            - Name: execution_memory
+              Type: bigint
 
   #
   # contests
