@@ -42,9 +42,9 @@ def parse(text):
 def handler(event, context):
     contest_id = event['Records'][0]['dynamodb']['Keys']['contest_id']['N']
 
-    version = firehose.describe_delivery_stream(DeliveryStreamName='codeforces-analysis-submissions')['DeliveryStreamDescription']['VersionId']
+    version = firehose.describe_delivery_stream(DeliveryStreamName='codeforces-submissions')['DeliveryStreamDescription']['VersionId']
     firehose.update_destination(
-        DeliveryStreamName='codeforces-analysis-submissions',
+        DeliveryStreamName='codeforces-submissions',
         CurrentDeliveryStreamVersionId=version,
         DestinationId='destinationId-000000000001',
         S3DestinationUpdate={
@@ -57,7 +57,7 @@ def handler(event, context):
 
     for chunk in parse(res.text):
         firehose.put_record_batch(
-            DeliveryStreamName='codeforces-analysis-submissions',
+            DeliveryStreamName='codeforces-submissions',
             Records=[{ 'Data': json.dumps(status) + "\n" } for status in chunk]
         )
 
