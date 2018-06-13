@@ -167,7 +167,7 @@ Resources:
       TableInput:
         Name: contests
         StorageDescriptor:
-          Location: 's3://codeforces-analysis/data/parquet/submissions/'
+          Location: 's3://codeforces-analysis/data/parquet/contests/'
           InputFormat: org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat
           OutputFormat: org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat
           SerdeInfo:
