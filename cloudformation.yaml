@@ -39,21 +39,13 @@ Resources:
         - AmazonKinesisFirehoseFullAccess
         - AWSLambdaInvocation-DynamoDB
 
-  SubmissionsPopFunction:
-    Type: AWS::Serverless::Function
+  SubmissionsFunctionTrigger:
+    Type: AWS::Lambda::EventSourceMapping
     Properties:
-      Handler: submissions_pop.handler
-      Runtime: python3.6
-      CodeUri: ./functions/submissions_pop.py
-      MemorySize: 128
-      Timeout: 10
-      Environment:
-        Variables:
-          SQS_URL: !Ref SubmissionsWaitQueue
-          DYNAMODB_TABLE: !Ref SubmissionsQueue
-      Policies:
-        - AmazonSQSFullAccess
-        - AmazonDynamoDBFullAccess
+      EventSourceArn: !GetAtt SubmissionsQueue.StreamArn
+      FunctionName: !GetAtt SubmissionsFunction.Arn
+      StartingPosition: LATEST
+      BatchSize: 1
 
   SubmissionsPushFunction:
     Type: AWS::Serverless::Function
@@ -65,22 +57,14 @@ Resources:
       Timeout: 10
       Environment:
         Variables:
-          SQS_URL: !Ref SubmissionsWaitQueue
+          DYNAMODB_TABLE: !Ref SubmissionsQueue
       Policies:
-        - AmazonSQSFullAccess
-
-  SubmissionsFunctionTrigger:
-    Type: AWS::Lambda::EventSourceMapping
-    Properties:
-      EventSourceArn: !GetAtt SubmissionsQueue.StreamArn
-      FunctionName: !GetAtt SubmissionsFunction.Arn
-      StartingPosition: LATEST
-      BatchSize: 1
+        - AmazonDynamoDBFullAccess
 
   SubmissionsFirehose:
     Type: AWS::KinesisFirehose::DeliveryStream
     Properties:
-      DeliveryStreamName: codeforces-analysis-submissions
+      DeliveryStreamName: codeforces-submissions
       DeliveryStreamType: DirectPut
       S3DestinationConfiguration:
         BucketARN: arn:aws:s3:::codeforces-analysis
@@ -105,9 +89,6 @@ Resources:
         WriteCapacityUnits: 1
       StreamSpecification:
         StreamViewType: KEYS_ONLY
-
-  SubmissionsWaitQueue:
-    Type: AWS::SQS::Queue
 
   SubmissionsTable:
     Type: AWS::Glue::Table
