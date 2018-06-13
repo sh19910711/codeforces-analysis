@@ -147,7 +147,7 @@ Resources:
   ContestsFirehose:
     Type: AWS::KinesisFirehose::DeliveryStream
     Properties:
-      DeliveryStreamName: codeforces-analysis-contests
+      DeliveryStreamName: codeforces-contests
       DeliveryStreamType: DirectPut
       S3DestinationConfiguration:
         BucketARN: arn:aws:s3:::codeforces-analysis
@@ -157,6 +157,34 @@ Resources:
           IntervalInSeconds: 300
           SizeInMBs: 128
         RoleARN: !GetAtt FirehoseRole.Arn
+
+  ContestsTable:
+    Type: AWS::Glue::Table
+    DependsOn: Database
+    Properties:
+      CatalogId: !Ref AWS::AccountId
+      DatabaseName: codeforces
+      TableInput:
+        Name: contests
+        StorageDescriptor:
+          Location: 's3://codeforces-analysis/data/parquet/submissions/'
+          InputFormat: org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat
+          OutputFormat: org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat
+          SerdeInfo:
+            SerializationLibrary: org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe
+          Columns:
+            - Name: contest_id
+              Type: bigint
+            - Name: contest_name
+              Type: string
+            - Name: contest_type
+              Type: string
+            - Name: contest_phase
+              Type: string
+            - Name: contest_duration
+              Type: string
+            - Name: contest_start_time
+              Type: string
 
   #
   # problems

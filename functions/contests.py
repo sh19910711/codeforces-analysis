@@ -34,13 +34,22 @@ def parse(text):
     return ()
 
 def handler(event, context):
+    version = firehose.describe_delivery_stream(DeliveryStreamName='codeforces-contests')['DeliveryStreamDescription']['VersionId']
+    firehose.update_destination(
+        DeliveryStreamName='codeforces-contests',
+        CurrentDeliveryStreamVersionId=version,
+        DestinationId='destinationId-000000000001',
+        S3DestinationUpdate={
+            'Prefix': 'data/parquet/contests/'
+        })
+
     url = 'http://codeforces.com/api/contest.list'
     logger.info('GET: {}'.format(url))
     res = requests.get(url)
 
     for chunk in parse(res.text):
         firehose.put_record_batch(
-            DeliveryStreamName='codeforces-analysis-contests',
+            DeliveryStreamName='codeforces-contests',
             Records=[{ 'Data': json.dumps(status) + "\n" } for status in chunk]
         )
 
