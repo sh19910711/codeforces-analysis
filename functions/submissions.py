@@ -48,7 +48,7 @@ def handler(event, context):
         CurrentDeliveryStreamVersionId=version,
         DestinationId='destinationId-000000000001',
         S3DestinationUpdate={
-            'Prefix': 'data/parquet/submissions/contest_id={}/'.format(contest_id)
+            'Prefix': 'data/parquet/submissions/'
         })
 
     url = 'http://codeforces.com/api/contest.status?contestId={}&from=1&count=100000'.format(contest_id)
