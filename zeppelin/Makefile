@@ -1,9 +1,11 @@
 run:
 	docker build -t zeppelin .
 	docker run \
-		-v /tmp/zeppelin-notebooks:/zeppelin/notebook \
+		-e ZEPPELIN_NOTEBOOK_STORAGE="org.apache.zeppelin.notebook.repo.S3NotebookRepo" \
+		-e ZEPPELIN_NOTEBOOK_S3_BUCKET="codeforces-analysis" \
+		-e ZEPPELIN_NOTEBOOK_S3_USER="zeppelin" \
 		-v $(HOME)/.aws:/root/.aws \
-		-p 8080:$(PORT) \
+		-p 8080:8080 \
 		--rm \
 		--name zeppelin \
 		zeppelin
