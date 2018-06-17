@@ -1,6 +1,7 @@
 run:
 	docker build -t zeppelin .
 	docker run \
+		-v $(PWD)/tmp:/wrk \
 		-e ZEPPELIN_NOTEBOOK_STORAGE="org.apache.zeppelin.notebook.repo.S3NotebookRepo" \
 		-e ZEPPELIN_NOTEBOOK_S3_BUCKET="codeforces-analysis" \
 		-e ZEPPELIN_NOTEBOOK_S3_USER="zeppelin" \
